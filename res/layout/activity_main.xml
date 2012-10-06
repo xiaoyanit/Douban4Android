@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <Button 
+        android:id="@+id/to_douban_act"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/douban_activity"/>
+    
+    <Button 
+        android:id="@+id/fetch_txt"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fetch_txt"/>
+    <Button 
+        android:id="@+id/fetch_img"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/fetch_img"/>
+    
+    <ScrollView 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/web_txt"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/hello_world"/>
+    </ScrollView>
+    
+    <ImageView 
+        android:id="@+id/web_img"
+        android:contentDescription="@string/fetch_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -1,0 +1,33 @@
+<resources>
+
+    <string name="app_name">DemoYau</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="fetch_txt">获取网页</string>
+    <string name="fetch_img">获取图片</string>
+	<string name="pref_down_title">Download Feed</string>
+	<string name="pref_down_desc">Network connectivity required to download the feed.</string>
+	<string name="pref_show_summary">Show Summaries</string>
+	<string name="pref_show_summary_desc">Show a summary for each link.</string>
+    
+	<string name="douban_activity">豆瓣API</string>
+	<string name="douban_oauth">豆瓣登录</string>
+	<string name="douban_user">用户信息</string>
+	<string name="book_colletion">用户藏书</string>
+	<string name="book_comments">豆瓣书评</string>
+	<string name="douban_user_hint">输入用户ID</string>
+	<string name="fetch_book">书籍信息</string>
+	<string name="input_isbn_hint">输入ISBN号</string>
+	
+	<string-array name="pref_down_entry">
+	    <item>Only when on Wi-Fi</item>
+	    <item>On any network</item>
+	</string-array>
+	
+	<string-array name="pref_down_entryvalue">
+	    <item>0</item>
+	    <item>1</item>
+	</string-array>
+	
+</resources>

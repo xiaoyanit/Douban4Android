@@ -2,6 +2,7 @@ package org.czzz.demo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +40,8 @@ public class DoubanBook {
 			summary;
 	public String rateMax, rateNum, rateAverage, rateMin, binding, pages;
 	public ArrayList<HashMap<String, String>> tags = new ArrayList<HashMap<String, String>>();
+	
+	public List<BookCommentEntry> comments;		//单独获取
 
 	protected void init(JSONObject json) {
 		
@@ -138,22 +141,6 @@ public class DoubanBook {
 
 		return sb.toString();
 		
-		/**
-		 * "id=" + id + "\n" + "isbn10=" + isbn10 + "\n" + "isbn13="
-				+ isbn13 + "\n" + "title=" + title + "\n" + "origin_title="
-				+ origin_title + "\n" + "alt_title=" + alt_title + "\n"
-				+ "subtitle=" + subtitle + "\n" + "url=" + url + "\n" + "alt="
-				+ alt + "\n" + "image=" + image + "\n" + "small_img="
-				+ small_img + "\n" + "large_img=" + large_img + "\n"
-				+ "medium_img=" + medium_img + "\n" + "author=" + author + "\n"
-				+ "translator=" + translator + "\n" + "publisher=" + publisher
-				+ "\n" + "pubdate=" + pubdate + "\n" + "ratings=" + rateMax
-				+ "/" + rateNum + "/" + rateAverage + "/" + rateMin + "\n"
-				+ "tags=" + tags.toString() + "\n" + "binding=" + binding
-				+ "\n" + "price=" + price + "\n" + "pages=" + pages + "\n"
-				+ "author_intro=" + author_intro + "\n" + "summary=" + summary;
-		 */
-	
 	}
 
 }

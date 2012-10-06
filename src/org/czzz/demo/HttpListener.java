@@ -10,8 +10,8 @@ public interface HttpListener {
 	
 	public static final int FETCH_BOOK_COLLECTION = 5;
 	public static final int FETCH_BOOK_COMMENTS = 6;
-	public static final int DOWNLOAD_XML_BOOK_COLLECTIONS = 7;
-	public static final int DOWNLOAD_XML_BOOK_COMMENTS = 8;
+	
+	public static final int FETCH_USER_CONTACTS = 7;
 	
 	public void onTaskCompleted(Object data);
 	

@@ -5,10 +5,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-
-import org.czzz.demo.BookCollectionXmlParser.Entry;
 import org.xmlpull.v1.XmlPullParserException;
-
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -45,7 +42,6 @@ public class XmlDownloadTask extends AsyncTask<Object, Object, Object>{
 		InputStream is = null;
 		// Only display the first 500 characters of the retrieved
 		// web page content.
-		int len = 5000;
 
 		try {
 			URL url = new URL(myurl);
@@ -69,6 +65,10 @@ public class XmlDownloadTask extends AsyncTask<Object, Object, Object>{
 				BookCommentXmlParser xmlcommentParser = new BookCommentXmlParser();
 				List<BookCommentEntry> comments = xmlcommentParser.parse(is);
 				return comments;
+			case HttpListener.FETCH_USER_CONTACTS:
+				ContactXmlParser xmlContactParser = new ContactXmlParser();
+				List<DoubanUser> contacts = xmlContactParser.parse(is);
+				return contacts;
 			default:
 				return null;
 			}

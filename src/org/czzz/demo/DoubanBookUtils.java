@@ -3,11 +3,10 @@ package org.czzz.demo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ProgressDialog;
-
 public class DoubanBookUtils {
 
-	public static void fetchBookInfo(String url, HttpListener listener){
+	public static void fetchBookInfo(String isbn, HttpListener listener){
+		String url = "https://api.douban.com/v2/book/isbn/" + isbn;
 		new HttpDownloadAsyncTask(listener).execute(url);
 	}
 	
@@ -36,6 +35,16 @@ public class DoubanBookUtils {
 		}
 		
 		return null;
+	}
+	
+	public static void fetchBookCollection(HttpListener listener, int type, String uid){
+		String url = "http://api.douban.com/people/" + uid + "/collection?cat=book&max-results=1000";
+		new XmlDownloadTask(listener, type).execute(url);
+	}
+	
+	public static void fetchBookComments(HttpListener listener, int type, String isbn){
+		String url = "http://api.douban.com/book/subject/isbn/" + isbn + "/reviews";
+		new XmlDownloadTask(listener, type).execute(url);
 	}
 	
 }

@@ -49,20 +49,6 @@ public class BookCollectionXmlParser {
         return entries;
     }
 
-	// This class represents a single entry (post) in the XML feed.
-	// It includes the data members "title," "link," and "summary."
-	public static class Entry {
-		public final String title;
-		public final String updated;
-		public final String link;
-
-		private Entry(String title, String updated, String link) {
-			this.title = title;
-			this.updated = updated;
-			this.link = link;
-		}
-	}
-	
 	// Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them
     // off
     // to their respective &quot;read&quot; methods for processing. Otherwise, skips the tag.
@@ -93,7 +79,14 @@ public class BookCollectionXmlParser {
         return entry;
     }
 
-    // Processes title tags in the feed.
+    /**
+     * Read the text in a tag 
+     * @param parser
+     * @param tag
+     * @return
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, tag);
         String title = readText(parser);
@@ -101,7 +94,14 @@ public class BookCollectionXmlParser {
         return title;
     }
     
-    private String readSubTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
+    /**
+     * Parse the sub Xml-content between tag, similar to readEntry() method
+     * @param parser
+     * @param tag
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+    private void readSubTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
     	parser.require(XmlPullParser.START_TAG, ns, tag);
     	while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -119,10 +119,16 @@ public class BookCollectionXmlParser {
             	skip(parser);
             }
     	}
-		return null;
+    	
     }
     
-    //Processes title tags in the feed.
+    /**
+     * Read tag text with different attribute value
+     * @param parser
+     * @param tag
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private void readAttributeTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
     	
         parser.require(XmlPullParser.START_TAG, ns, tag);
@@ -162,9 +168,13 @@ public class BookCollectionXmlParser {
     	
     } 
     
-    // Processes link tags in the feed.
-    private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String link = "";
+    /**
+     * Read the link with different attribute value
+     * @param parser
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+    private void readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "link");
         String tag = parser.getName();
         String relType = parser.getAttributeValue(null, "rel"); //属性
@@ -180,11 +190,9 @@ public class BookCollectionXmlParser {
                 parser.nextTag();
             }else{
             	skip(parser);
-            	return null;
             }
         }
         parser.require(XmlPullParser.END_TAG, ns, "link");
-        return link;
     }
 
     // For the tags title and summary, extracts their text values.

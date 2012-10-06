@@ -1,5 +1,6 @@
 package org.czzz.demo;
 
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -10,13 +11,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookCommentXmlParser {
+public class ContactXmlParser {
 
 	private static final String ns = null;
-	private BookCommentEntry entry;
+	private DoubanUser entry;
 	// We don't use namespaces
 
-	public List<BookCommentEntry> parse(InputStream in) throws XmlPullParserException, IOException {
+	public List<DoubanUser> parse(InputStream in) throws XmlPullParserException, IOException {
+		
+		Log.d("DEBUG", "start to parse");
 		
 		try {
 			XmlPullParser parser = Xml.newPullParser();
@@ -29,8 +32,8 @@ public class BookCommentXmlParser {
 		}
 	}
 	
-	private List<BookCommentEntry> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List<BookCommentEntry> entries = new ArrayList<BookCommentEntry>();
+	private List<DoubanUser> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List<DoubanUser> entries = new ArrayList<DoubanUser>();
 
         parser.require(XmlPullParser.START_TAG, ns, "feed");
         while (parser.next() != XmlPullParser.END_TAG) {
@@ -40,6 +43,7 @@ public class BookCommentXmlParser {
             String name = parser.getName();
             // Starts by looking for the entry tag
             if (name.equals("entry")) {
+            	Log.d("DEBUG", "start to parse entry");
                 entries.add(readEntry(parser));
             } else {
                 skip(parser);
@@ -48,13 +52,12 @@ public class BookCommentXmlParser {
         return entries;
     }
 
-	
 	// Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them
     // off
     // to their respective &quot;read&quot; methods for processing. Otherwise, skips the tag.
-    private BookCommentEntry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private DoubanUser readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
         
-    	entry = new BookCommentEntry();
+    	entry = new DoubanUser();
     	
     	parser.require(XmlPullParser.START_TAG, ns, "entry");
         
@@ -65,26 +68,17 @@ public class BookCommentXmlParser {
             String name = parser.getName();
             if (name.equals("id")) {
             	String id_link = readTag(parser, "id");
-            	entry.id = id_link.substring(
-            			id_link.lastIndexOf("/") + 1);
+            	entry.id = id_link.substring(id_link.lastIndexOf("/") + 1);
             } else if (name.equals("title")) {
-            	entry.title = readTag(parser, "title");
-            } else if (name.equals("published")) {
-            	entry.published = readTag(parser, "published");
-            } else if (name.equals("updated")) {
-            	entry.updated = readTag(parser, "updated");
-            } else if (name.equals("summary")) {
-            	entry.summary = readTag(parser, "summary");
+            	entry.name = readTag(parser, "title");
+            } else if (name.equals("db:uid")) {
+            	entry.uid = readTag(parser, "db:uid");
+            } else if (name.equals("db:signature")){
+            	entry.signature = readTag(parser, "db:signature");
+            } else if (name.equals("content")){
+            	entry.desc = readTag(parser, "content");
             } else if (name.equals("link")){
             	readLink(parser);
-            } else if (name.equals("author")){
-            	readSubTag(parser, "author");
-            } else if (name.equals("db:votes")){
-            	entry.votes = readAttributeTag(parser,"db:votes");
-            } else if (name.equals("db:useless")){
-            	entry.useless = readAttributeTag(parser,"db:useless");
-            } else if (name.equals("gd:rating")){
-            	entry.rating = readAttributeTag(parser,"gd:rating");
             } else {
                 skip(parser);
             }
@@ -92,7 +86,14 @@ public class BookCommentXmlParser {
         return entry;
     }
 
-    // Processes title tags in the feed.
+    /**
+     * Read the text in a tag 
+     * @param parser
+     * @param tag
+     * @return
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
     private String readTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, tag);
         String title = readText(parser);
@@ -100,60 +101,25 @@ public class BookCommentXmlParser {
         return title;
     }
     
-    private String readSubTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
-    	parser.require(XmlPullParser.START_TAG, ns, tag);
-    	while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            if(name.equals("name")){
-            	entry.author_name = readTag(parser, "name");
-            }else if(name.equals("link")){	// for author link
-            	readLink(parser);
-            }else{
-            	skip(parser);
-            }
-    	}
-		return null;
-    }
-    
-    //Processes title tags in the feed.
-    private String readAttributeTag(XmlPullParser parser, String tag) throws IOException, XmlPullParserException {
-    	
-        parser.require(XmlPullParser.START_TAG, ns, tag);
-        String value = parser.getAttributeValue(null, "value"); //属性
-        parser.nextTag();
-        parser.require(XmlPullParser.END_TAG, ns, tag);
-    	
-        return value;
-    } 
-    
-    // Processes link tags in the feed.
-    private String readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
-        String link = "";
+    /**
+     * Read the link with different attribute value
+     * @param parser
+     * @throws IOException
+     * @throws XmlPullParserException
+     */
+    private void readLink(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "link");
         String tag = parser.getName();
         String relType = parser.getAttributeValue(null, "rel"); //属性
         if (tag.equals("link")) {
-            if (relType.equals("alternate") && parser.getDepth() == 3) {
-                entry.link = parser.getAttributeValue(null, "href");
+            if (relType.equals("icon")) {
+                entry.avatar = parser.getAttributeValue(null, "href");
                 parser.nextTag();
-        	} else if(relType.equals("alternate") && parser.getDepth() == 4){
-        		entry.author_link = parser.getAttributeValue(null, "href");
-        		String aLink = entry.author_link.substring(0, entry.author_link.length()-1);
-        		entry.author_uid = aLink.substring(aLink.lastIndexOf("/") + 1);
-        		parser.nextTag();
-        	} else if(relType.equals("icon")){
-        		entry.author_avatar = parser.getAttributeValue(null, "href");
-        		parser.nextTag();
-        	} else{
+            } else{
             	skip(parser);
-            	return null;
             }
         }
         parser.require(XmlPullParser.END_TAG, ns, "link");
-        return link;
     }
 
     // For the tags title and summary, extracts their text values.

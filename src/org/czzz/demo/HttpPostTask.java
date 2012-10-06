@@ -31,7 +31,6 @@ public class HttpPostTask extends AsyncTask<Object, String, String>{
 		
 		HttpPost httpRequest = new HttpPost(url);
 		HttpResponse httpResponse;
-		String result = "";
 		
 		try{
 			//发出HTTP request 
@@ -40,9 +39,9 @@ public class HttpPostTask extends AsyncTask<Object, String, String>{
             //取得HTTP response 
             httpResponse=new DefaultHttpClient().execute(httpRequest);
             if(httpResponse.getStatusLine().getStatusCode()==200){
-            	return result = "200\t" + EntityUtils.toString(httpResponse.getEntity());
+            	return "200\t" + EntityUtils.toString(httpResponse.getEntity());
             }else{
-            	return result = httpResponse.getStatusLine().getStatusCode()
+            	return httpResponse.getStatusLine().getStatusCode()
             			+ "\t" + EntityUtils.toString(httpResponse.getEntity());
             }
             

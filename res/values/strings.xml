@@ -14,6 +14,7 @@
 	<string name="douban_activity">豆瓣API</string>
 	<string name="douban_oauth">豆瓣登录</string>
 	<string name="douban_user">用户信息</string>
+	<string name="user_contact">用户关注</string>
 	<string name="book_colletion">用户藏书</string>
 	<string name="book_comments">豆瓣书评</string>
 	<string name="douban_user_hint">输入用户ID</string>

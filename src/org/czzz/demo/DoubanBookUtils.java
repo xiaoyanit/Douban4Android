@@ -3,6 +3,8 @@ package org.czzz.demo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class DoubanBookUtils {
 
 	public static void fetchBookInfo(String isbn, HttpListener listener){
@@ -22,6 +24,7 @@ public class DoubanBookUtils {
 	public static DoubanBook parseBookInfo(String jsonStr){
 		
 		JSONObject json = null;
+		Log.d("DEBUG", "jsonStr: " + jsonStr);
 		DoubanBook book = new DoubanBook();
 		try {
 			json = new JSONObject(jsonStr);
@@ -29,12 +32,14 @@ public class DoubanBookUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(json!=null) {
+		
+		if(json!=null && !json.has("code")) {
 			book.init(json);
 			return book;
+		}else{
+			return null;
 		}
 		
-		return null;
 	}
 	
 	public static void fetchBookCollection(HttpListener listener, int type, String uid){

@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,7 +27,6 @@ public class DoubanActivity extends Activity{
 
 	private EditText isbnEdt;
 	private EditText uidEdt;
-	private Button fetchInfoBtn;
 	private TextView bookInfoTv;
 	private ImageView bookCover;
 	
@@ -48,85 +46,60 @@ public class DoubanActivity extends Activity{
 		
 		isbnEdt = (EditText)findViewById(R.id.edt_book_isbn);
 		uidEdt = (EditText)findViewById(R.id.edt_user_id);
-		fetchInfoBtn = (Button)findViewById(R.id.btn_fetch_book);
 		bookInfoTv = (TextView)findViewById(R.id.book_info);
 		bookCover = (ImageView)findViewById(R.id.book_cover);
 		
 		dbOAuth = new DoubanOAuth(this);
 		user = new DoubanUser();
 		
-		fetchInfoBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(NetUtils.isNetworkOk(DoubanActivity.this)){
-					fetchBookInfo(isbnEdt.getText().toString());
-				}
-			}
-			
-		});
-		
+		Button fetchInfoBtn = (Button)findViewById(R.id.btn_fetch_book);
 		Button dbOAuthBtn = (Button)findViewById(R.id.btn_douban_oauth);
-		dbOAuthBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				dbOAuth.lauchforVerifyCode(DoubanActivity.this);
-			}
-			
-		});
-		
 		Button dbUserBtn = (Button)findViewById(R.id.btn_douban_user);
-		dbUserBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if(NetUtils.isNetworkOk(DoubanActivity.this)){
-					fetchUserInfo(uidEdt.getText().toString());
-				}
-			}
-			
-		});
-		
 		Button bookColBtn = (Button)findViewById(R.id.btn_book_collect);
-		bookColBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				EditText edt = (EditText)findViewById(R.id.edt_user_id);
-				fetchBookCollection(edt.getText().toString());
-			}
-			
-		});
-		
 		Button bookComBtn = (Button)findViewById(R.id.btn_book_comm);
-		bookComBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				// 根据isbn获取书评
-				fetchBookComments(isbnEdt.getText().toString());
-			}
-			
-		});
-		
 		Button contactBtn = (Button)findViewById(R.id.btn_user_contact);
-		contactBtn.setOnClickListener(new OnClickListener(){
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				fetchUserContacts(uidEdt.getText().toString());
-			}
-			
-		});
+		
+		dbOAuthBtn.setOnClickListener(btnlistener);
+		dbUserBtn.setOnClickListener(btnlistener);
+		contactBtn.setOnClickListener(btnlistener);
+		bookColBtn.setOnClickListener(btnlistener);
+		bookComBtn.setOnClickListener(btnlistener);
+		fetchInfoBtn.setOnClickListener(btnlistener);
+		
 	}
 
+	
+	public View.OnClickListener btnlistener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			
+			if(!NetUtils.isNetworkOk(DoubanActivity.this)) return;
+			
+			switch(v.getId()){
+			case R.id.btn_douban_oauth:
+				dbOAuth.lauchforVerifyCode(DoubanActivity.this);
+				break;
+			case R.id.btn_douban_user:
+				fetchUserInfo(uidEdt.getText().toString());
+				break;
+			case R.id.btn_user_contact:
+				fetchUserContacts(uidEdt.getText().toString());
+				break;
+			case R.id.btn_fetch_book:
+				fetchBookInfo(isbnEdt.getText().toString());
+				break;
+			case R.id.btn_book_comm:
+				fetchBookComments(isbnEdt.getText().toString());
+				break;
+			case R.id.btn_book_collect:
+				fetchBookCollection(uidEdt.getText().toString());
+				break;
+			}
+		}
+	};
+	
 	
 	/**
 	 * 根据isbn从豆瓣获取书籍文字信息
@@ -156,6 +129,9 @@ public class DoubanActivity extends Activity{
 	 * @param userid
 	 */
 	protected void fetchUserInfo(String userid){
+		pd = new ProgressDialog(this);
+		pd.setMessage("正在获取用户信息...");
+		pd.show();
 		HttpTaskListener userInfoListener = new HttpTaskListener(HttpListener.FETCH_USER_INFO);
 		if(dbOAuth.getAccessToken().equals(""))
 			DoubanUser.fetchUserInfo(userid, userInfoListener);
@@ -239,22 +215,34 @@ public class DoubanActivity extends Activity{
 						+ "\nuser_id: " + dbOAuth.getDoubanUserId());
 				break;
 			case HttpListener.FETCH_BOOK_INFO: // 获取到书籍信息
+				if(pd != null) pd.dismiss();
+				if(data == null){
+					Toast.makeText(DoubanActivity.this, "book not found", Toast.LENGTH_SHORT).show();
+					break;
+				}
 				book = DoubanBookUtils.parseBookInfo(String.valueOf(data));
 				bookInfoTv.setText("book:\n" + book);
-				if(pd != null) pd.dismiss();
 				fetchBookCover(book.image);
 				break;
 			case HttpListener.FETCH_BOOK_COVER:	// 获取到书籍封面
 				bookCover.setImageBitmap((Bitmap)data);
 				break;
 			case HttpListener.FETCH_USER_INFO: // 获取用户信息
+				if(pd != null) pd.dismiss();
 				user = new DoubanUser();
-				user.parse4User(String.valueOf(data));
-				bookInfoTv.setText("user:\n" + user);
+				// 解析成功 boolean
+				if(user.parse4User(String.valueOf(data)))
+					bookInfoTv.setText("user:\n" + user);
+				else
+					Toast.makeText(DoubanActivity.this, "error: user not found!", Toast.LENGTH_SHORT).show();
 				break;
 			case HttpListener.FETCH_BOOK_COLLECTION:	//获取用户书籍收藏, 用户属性之一
 				if(pd != null) pd.dismiss();
 				StringBuilder collectionsBuilder = new StringBuilder();
+				if(data == null){
+					Toast.makeText(DoubanActivity.this, "error: user not found !", Toast.LENGTH_SHORT).show();
+					break;
+				}
 				for(BookCollectionEntry entry : (List<BookCollectionEntry>)data){
 					collectionsBuilder.append(entry + "\n\n");
 				}
@@ -263,6 +251,10 @@ public class DoubanActivity extends Activity{
 			case HttpListener.FETCH_BOOK_COMMENTS:		//获取书籍评论
 				if(pd != null) pd.dismiss();
 				StringBuilder commentsBuilder = new StringBuilder();
+				if(data == null){
+					Toast.makeText(DoubanActivity.this, "error: book not found !", Toast.LENGTH_SHORT).show();
+					break;
+				}
 				for(BookCommentEntry entry : (List<BookCommentEntry>)data){
 					commentsBuilder.append(entry + "\n\n");
 				}
@@ -271,6 +263,10 @@ public class DoubanActivity extends Activity{
 			case HttpListener.FETCH_USER_CONTACTS:
 				if(pd != null) pd.dismiss();
 				StringBuilder contactsBuilder = new StringBuilder();
+				if(data == null){
+					Toast.makeText(DoubanActivity.this, "error: user not found !", Toast.LENGTH_SHORT).show();
+					break;
+				}
 				for(DoubanUser us : (List<DoubanUser>)data){
 					contactsBuilder.append(us + "\n\n");
 				}

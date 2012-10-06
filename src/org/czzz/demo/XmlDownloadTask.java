@@ -54,6 +54,9 @@ public class XmlDownloadTask extends AsyncTask<Object, Object, Object>{
 			conn.connect();
 			int response = conn.getResponseCode();
 			Log.d("DEBUG_TAG", "The response is: " + response);
+			
+			if(response != 200) return null;
+			
 			is = conn.getInputStream();
 			
 			switch(taskType){

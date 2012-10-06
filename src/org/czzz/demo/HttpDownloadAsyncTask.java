@@ -43,7 +43,6 @@ public class HttpDownloadAsyncTask extends AsyncTask<Object, Object, Object> {
 		InputStream is = null;
 		// Only display the first 500 characters of the retrieved
 		// web page content.
-		int len = 5000;
 
 		try {
 			URL url = new URL(myurl);
@@ -56,11 +55,15 @@ public class HttpDownloadAsyncTask extends AsyncTask<Object, Object, Object> {
 			conn.connect();
 			int response = conn.getResponseCode();
 			Log.d("DEBUG_TAG", "The response is: " + response);
-			is = conn.getInputStream();
-
-			// Convert the InputStream into a string
-			String contentAsString = readIt(is, len);
-			return contentAsString;
+			
+			if(response == 200){
+				is = conn.getInputStream();
+				// Convert the InputStream into a string
+				String contentAsString = readIt(is);
+				return contentAsString;
+			}else{
+				return null;
+			}
 
 			// Makes sure that the InputStream is closed after the app is
 			// finished using it.
@@ -72,7 +75,7 @@ public class HttpDownloadAsyncTask extends AsyncTask<Object, Object, Object> {
 	}
 
 	// Reads an InputStream and converts it to a String.
-	public String readIt(InputStream stream, int len) throws IOException,
+	public String readIt(InputStream stream) throws IOException,
 			UnsupportedEncodingException {
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(

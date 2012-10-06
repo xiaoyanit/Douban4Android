@@ -18,7 +18,12 @@ public class DoubanUser {
 	
 	public List<BookCollectionEntry> collections;	// 藏书
 	
-	protected void init(JSONObject json) {
+	protected boolean init(JSONObject json) {
+		
+		Log.d("DEBUG", "json: " + json);
+		
+		if(json.has("code")) return false;
+		
 		try {
 			id = json.getString("id");
 			uid = json.getString("uid");
@@ -37,9 +42,11 @@ public class DoubanUser {
 			e.printStackTrace();
 			Log.e("EXCEPTION", "JSON FAIL --- " + e.getMessage());
 		}
+		
+		return true;
 	}
 	
-	public void parse4User(String jsonStr){
+	public boolean parse4User(String jsonStr){
 		JSONObject json = null;
 		try {
 			json = new JSONObject(jsonStr);
@@ -48,8 +55,10 @@ public class DoubanUser {
 			e.printStackTrace();
 		}
 		if(json!=null) {
-			init(json);
+			return init(json);
 		}
+		
+		return false;
 	}
 	
 	/**

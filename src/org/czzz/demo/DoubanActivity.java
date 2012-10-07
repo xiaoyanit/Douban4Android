@@ -2,7 +2,7 @@ package org.czzz.demo;
 
 import java.util.List;
 
-import com.zijunlin.Zxing.Demo.CaptureActivity;
+import org.czzz.demo.zxing.CaptureActivity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

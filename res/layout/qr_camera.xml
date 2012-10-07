@@ -24,7 +24,7 @@
         android:layout_height="fill_parent"
         android:layout_gravity="center" />
     
-    <com.zijunlin.Zxing.Demo.view.ViewfinderView
+    <org.czzz.demo.zxing.view.ViewfinderView
         android:id="@+id/viewfinder_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

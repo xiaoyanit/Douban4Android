@@ -65,12 +65,27 @@
             android:text="@string/book_colletion" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/edt_book_isbn"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/input_isbn_hint" />
-
+        android:orientation="horizontal" >
+        
+        <EditText
+	        android:id="@+id/edt_book_isbn"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:hint="@string/input_isbn_hint" />
+        
+        <Button
+            android:id="@+id/btn_scan_qrcode"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/scan_for_qr" />
+        
+    </LinearLayout>
+    
 
 	<ImageView
 	    android:id="@+id/book_cover"

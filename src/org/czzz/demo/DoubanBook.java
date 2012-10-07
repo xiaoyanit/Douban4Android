@@ -63,9 +63,11 @@ public class DoubanBook {
 			medium_img = imagesJson.getString("medium");
 
 			JSONArray authorArray = json.getJSONArray("author");
-			author = "";
 			for (int i = 0; i < authorArray.length(); i++) {
-				author = author + authorArray.get(i) + " / ";
+				if(i == 0) 
+					author = "" + authorArray.get(i);
+				else 
+					author = author + " / " + authorArray.get(i);
 			}
 
 			JSONArray transArray = json.getJSONArray("translator");

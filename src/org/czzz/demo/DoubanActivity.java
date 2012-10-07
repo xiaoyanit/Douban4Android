@@ -2,6 +2,8 @@ package org.czzz.demo;
 
 import java.util.List;
 
+import com.zijunlin.Zxing.Demo.CaptureActivity;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -58,6 +60,7 @@ public class DoubanActivity extends Activity{
 		Button bookColBtn = (Button)findViewById(R.id.btn_book_collect);
 		Button bookComBtn = (Button)findViewById(R.id.btn_book_comm);
 		Button contactBtn = (Button)findViewById(R.id.btn_user_contact);
+		Button scanQRBtn = (Button)findViewById(R.id.btn_scan_qrcode);
 		
 		dbOAuthBtn.setOnClickListener(btnlistener);
 		dbUserBtn.setOnClickListener(btnlistener);
@@ -65,6 +68,7 @@ public class DoubanActivity extends Activity{
 		bookColBtn.setOnClickListener(btnlistener);
 		bookComBtn.setOnClickListener(btnlistener);
 		fetchInfoBtn.setOnClickListener(btnlistener);
+		scanQRBtn.setOnClickListener(btnlistener);
 		
 	}
 
@@ -95,6 +99,10 @@ public class DoubanActivity extends Activity{
 				break;
 			case R.id.btn_book_collect:
 				fetchBookCollection(uidEdt.getText().toString());
+				break;
+			case R.id.btn_scan_qrcode:
+				Intent i = new Intent(DoubanActivity.this, CaptureActivity.class);
+				startActivityForResult(i,0);
 				break;
 			}
 		}
@@ -145,7 +153,7 @@ public class DoubanActivity extends Activity{
 	 */
 	protected void fetchBookCollection(String userid){
 		pd = new ProgressDialog(this);
-		pd.setMessage("正在从用户豆瓣藏书...");
+		pd.setMessage("正在获取用户藏书...");
 		pd.show();
 		HttpTaskListener listener = new HttpTaskListener(HttpListener.FETCH_BOOK_COLLECTION);
 		DoubanBookUtils.fetchBookCollection(listener, listener.type, userid);
@@ -282,5 +290,30 @@ public class DoubanActivity extends Activity{
 		}
 		
 	}
+
+
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		
+		if(resultCode == RESULT_OK){
+			String codeFormat = data.getStringExtra("bracode_format");
+			String codeText = data.getStringExtra("bracode_text");
+			
+			if(codeFormat.contains("EAN")){
+				isbnEdt.setText(codeText);
+				fetchBookInfo(codeText);
+			}else{
+				Toast.makeText(this, "not isbn for book", Toast.LENGTH_SHORT).show();
+			}
+			
+		}
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	}
+	
+	
+	
 	
 }

@@ -20,6 +20,8 @@
 	<string name="douban_user_hint">输入用户ID</string>
 	<string name="fetch_book">书籍信息</string>
 	<string name="input_isbn_hint">输入ISBN号</string>
+	<string name="scan_for_qr">扫描条码</string>
+	<string name="scan_please_note">请将条码置于取景框内扫描</string>
 	
 	<string-array name="pref_down_entry">
 	    <item>Only when on Wi-Fi</item>

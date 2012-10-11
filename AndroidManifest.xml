@@ -15,6 +15,7 @@
 	<uses-feature android:name="android.hardware.camera.autofocus" />
 	<uses-permission android:name="android.permission.VIBRATE"/>
   	<uses-permission android:name="android.permission.FLASHLIGHT"/>
+  	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -49,6 +50,21 @@
                 <action android:name="org.czzz.action.qrscan"/>
             </intent-filter>
 		</activity>
+		
+        <activity android:name=".SinaPlaceActivity"
+            android:label="@string/sina_palce">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 
+                <data android:scheme="sample"/> -->
+                <data android:scheme="czzz" android:host="SinaPlaceActivity"/>
+            </intent-filter>
+            
+        </activity>
+        
+        <activity android:name="com.weibo.net.WeiboWebviewActivity"></activity>
         
     </application>
     

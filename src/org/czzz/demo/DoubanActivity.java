@@ -1,8 +1,11 @@
 package org.czzz.demo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.czzz.demo.zxing.CaptureActivity;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -61,6 +64,7 @@ public class DoubanActivity extends Activity{
 		Button bookComBtn = (Button)findViewById(R.id.btn_book_comm);
 		Button contactBtn = (Button)findViewById(R.id.btn_user_contact);
 		Button scanQRBtn = (Button)findViewById(R.id.btn_scan_qrcode);
+		Button searchBtn = (Button)findViewById(R.id.btn_key_search);
 		
 		dbOAuthBtn.setOnClickListener(btnlistener);
 		dbUserBtn.setOnClickListener(btnlistener);
@@ -69,6 +73,7 @@ public class DoubanActivity extends Activity{
 		bookComBtn.setOnClickListener(btnlistener);
 		fetchInfoBtn.setOnClickListener(btnlistener);
 		scanQRBtn.setOnClickListener(btnlistener);
+		searchBtn.setOnClickListener(btnlistener);
 		
 	}
 
@@ -103,6 +108,10 @@ public class DoubanActivity extends Activity{
 			case R.id.btn_scan_qrcode:
 				Intent i = new Intent(DoubanActivity.this, CaptureActivity.class);
 				startActivityForResult(i,0);
+				break;
+			case R.id.btn_key_search:
+				EditText edt = (EditText)findViewById(R.id.edt_book_key);
+				searchBooks(edt.getText().toString());
 				break;
 			}
 		}
@@ -172,12 +181,24 @@ public class DoubanActivity extends Activity{
 		DoubanBookUtils.fetchBookComments(listener, listener.type, isbn);
 	}
 
+	/**
+	 * fetch catacts of the user
+	 * @param uid
+	 */
 	protected void fetchUserContacts(String uid){
 		pd = new ProgressDialog(this);
 		pd.setMessage("正在获取用户关注列表...");
 		pd.show();
 		HttpTaskListener listener = new HttpTaskListener(HttpListener.FETCH_USER_CONTACTS);
 		DoubanUser.fetchUserContacts(uid, listener, listener.type);
+	}
+	
+	protected void searchBooks(String keyword){
+		pd = new ProgressDialog(this);
+		pd.setMessage("正在从豆瓣搜索相关图书...");
+		pd.show();
+		HttpTaskListener booksearchListener = new HttpTaskListener(HttpListener.SEARCH_BOOKS);
+		DoubanBookUtils.searchBooks(keyword, booksearchListener);
 	}
 	
 	/**
@@ -279,6 +300,32 @@ public class DoubanActivity extends Activity{
 					contactsBuilder.append(us + "\n\n");
 				}
 				bookInfoTv.setText("contacts:\n" + contactsBuilder.toString());
+				break;
+			case HttpListener.SEARCH_BOOKS:
+				if(data == null){
+					Toast.makeText(DoubanActivity.this, "book not found", Toast.LENGTH_SHORT).show();
+					break;
+				}
+				
+				bookInfoTv.setText("search books: ");
+				
+				try {
+					JSONObject json = new JSONObject(String.valueOf(data));
+					bookInfoTv.append("count: " + json.getString("count")
+							+ "\t\t total: " + json.getString("total"));
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				ArrayList<DoubanBook> list = DoubanBookUtils.parseSearchBooks(String.valueOf(data));
+				if(pd != null) pd.dismiss();
+				
+				for(DoubanBook book : list){
+					bookInfoTv.append("\n\n==========================\n" + book);
+				}
+				
+//				bookInfoTv.setText("book:\n" + data);
 				break;
 			}
 		}

@@ -79,11 +79,13 @@ public class DoubanBook {
 			publisher = json.getString("publisher");
 			pubdate = json.getString("pubdate");
 
-			JSONObject rateJson = json.getJSONObject("rating");
-			rateMax = rateJson.getString("max");
-			rateMin = rateJson.getString("min");
-			rateNum = rateJson.getString("numRaters");
-			rateAverage = rateJson.getString("average");
+			if(json.has("rating")){
+				JSONObject rateJson = json.getJSONObject("rating");
+				rateMax = rateJson.getString("max");
+				rateMin = rateJson.getString("min");
+				rateNum = rateJson.getString("numRaters");
+				rateAverage = rateJson.getString("average");
+			}
 
 			JSONArray tagArray = json.getJSONArray("tags");
 			for (int i = 0; i < tagArray.length(); i++) {

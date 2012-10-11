@@ -19,41 +19,11 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	Button btnTxt, btnImg;
-	TextView webTxt;
-	ImageView webImg;
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		btnTxt = (Button) findViewById(R.id.fetch_txt);
-		btnImg = (Button) this.findViewById(R.id.fetch_img);
-		webTxt = (TextView) findViewById(R.id.web_txt);
-		webImg = (ImageView) findViewById(R.id.web_img);
 
-		btnTxt.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-//				if(isNetworkOk())
-//					fetchWebText("http://www.uxuan365.com");
-			}
-
-		});
-
-		btnImg.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-//				if(isNetworkOk())
-//					fetchWebImage("http://uxuan-pic.stor.sinaapp.com/header-bg.png");
-			}
-
-		});
-		
 		Button doubanBtn = (Button)findViewById(R.id.to_douban_act);
 		doubanBtn.setOnClickListener(new OnClickListener(){
 
@@ -65,29 +35,22 @@ public class MainActivity extends Activity {
 			}
 			
 		});
+		
+		Button sinaBtn = (Button)findViewById(R.id.sina_place);
+		sinaBtn.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(MainActivity.this, SinaPlaceActivity.class);
+				startActivity(i);
+			}
+			
+		});
 
 	}
 
 	
-	Handler handler = new Handler(){
-
-		@Override
-		public void handleMessage(Message msg) {
-			// TODO Auto-generated method stub
-			switch(msg.what){
-			case 0:
-				webTxt.setText("out: " + String.valueOf(msg.obj));
-				break;
-			case 1:
-				webImg.setImageBitmap((Bitmap)(msg.obj));
-				break;
-			}
-			super.handleMessage(msg);
-		}
-		 
-	};
-	
-
 	public boolean isNetworkOk() {
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

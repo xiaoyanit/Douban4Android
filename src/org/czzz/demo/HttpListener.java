@@ -13,6 +13,10 @@ public interface HttpListener {
 	
 	public static final int FETCH_USER_CONTACTS = 7;
 	
+	public static final int FETCH_SINA_PLACES = 8;
+	
+	public static final int SEARCH_BOOKS = 9;
+	
 	public void onTaskCompleted(Object data);
 	
 	public void onTaskFailed(String data);

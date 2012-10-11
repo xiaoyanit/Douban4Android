@@ -11,29 +11,9 @@
         android:text="@string/douban_activity"/>
     
     <Button 
-        android:id="@+id/fetch_txt"
+        android:id="@+id/sina_place"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/fetch_txt"/>
-    <Button 
-        android:id="@+id/fetch_img"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/fetch_img"/>
+        android:text="@string/sina_palce"/>
     
-    <ScrollView 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/web_txt"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/hello_world"/>
-    </ScrollView>
-    
-    <ImageView 
-        android:id="@+id/web_img"
-        android:contentDescription="@string/fetch_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
 </LinearLayout>

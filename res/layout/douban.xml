@@ -86,6 +86,27 @@
         
     </LinearLayout>
     
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        
+        <EditText
+	        android:id="@+id/edt_book_key"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:hint="@string/input_key_hint" />
+        
+        <Button
+            android:id="@+id/btn_key_search"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/search_by_key" />
+        
+    </LinearLayout>
+    
 
 	<ImageView
 	    android:id="@+id/book_cover"

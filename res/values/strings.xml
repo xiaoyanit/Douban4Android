@@ -4,7 +4,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="fetch_txt">获取网页</string>
+    <string name="sina_palce">新浪位置服务</string>
+    <string name="sina_place_nearby">附近位置</string>
+    <string name="gps_location">获取当前经纬度</string>
+    <string name="sina_oauth">微博OAuth认证</string>
     <string name="fetch_img">获取图片</string>
 	<string name="pref_down_title">Download Feed</string>
 	<string name="pref_down_desc">Network connectivity required to download the feed.</string>
@@ -21,6 +24,8 @@
 	<string name="fetch_book">书籍信息</string>
 	<string name="input_isbn_hint">输入ISBN号</string>
 	<string name="scan_for_qr">扫描条码</string>
+	<string name="input_key_hint">请输入关键词</string>
+	<string name="search_by_key">搜索相关</string>
 	<string name="scan_please_note">请将条码置于取景框内扫描</string>
 	
 	<string-array name="pref_down_entry">
